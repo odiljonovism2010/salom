@@ -1,0 +1,1112 @@
+/* =========================================================
+   1. ASOSIY SOZLAMALAR VA OZGARUVCHILAR
+========================================================= */
+:root {
+  --bg-primary: #f5f1ed;
+  --text-dark: #292421;
+  --text-muted: #817871;
+  --accent-gold: #d4af37;
+  --accent-gold-glow: rgba(212, 175, 55, 0.4);
+  --btn-dark: #3b332f;
+  --btn-dark-hover: #211d1a;
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(130, 110, 95, 0.16);
+  --shadow-lux: 0 30px 90px rgba(60, 45, 35, 0.12);
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  background: var(--bg-primary);
+  color: var(--text-dark);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   2. HIGH-END ANIMATSIYALAR
+========================================================= */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes floating {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.12);
+  }
+}
+
+@keyframes shine {
+  from {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  to {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+@keyframes weddingLight {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.08) translateY(-1%);
+    opacity: 0.85;
+  }
+}
+
+@keyframes labelReveal {
+  from {
+    opacity: 0;
+    letter-spacing: 2px;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 9px;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   3. HOME PAGE (BOSH SAHIFA)
+========================================================= */
+
+.home-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  color: white;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  isolation: isolate;
+}
+
+.home-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(90deg, rgba(10, 8, 7, 0.62), rgba(20, 16, 13, 0.32), rgba(10, 8, 7, 0.62)),
+    linear-gradient(180deg, rgba(10, 8, 7, 0.4), rgba(10, 8, 7, 0.2), rgba(10, 8, 7, 0.6));
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.home-light {
+  position: absolute;
+  inset: -20%;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.2), transparent 35%);
+  animation: weddingLight 8s ease-in-out infinite;
+}
+
+.home-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+  animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.home-label {
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  letter-spacing: 9px;
+  margin-bottom: 28px;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 3px 15px rgba(0, 0, 0, 0.5);
+  animation: labelReveal 1s ease 0.2s both;
+}
+
+.home-content h1 {
+  margin: 0 0 28px;
+  font-size: clamp(48px, 7vw, 82px);
+  line-height: 1.03;
+  font-weight: 400;
+  letter-spacing: -1.5px;
+  color: white;
+  text-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
+  animation: scaleIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.home-line {
+  width: 70px;
+  height: 1px;
+  margin: 0 auto 30px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  animation: fadeUp 0.8s ease 0.45s both;
+}
+
+.home-description {
+  max-width: 560px;
+  margin: 0 auto 42px;
+  font-size: 17px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.5);
+  animation: fadeUp 0.8s ease 0.55s both;
+}
+
+
+/* =========================================================
+   4. TUGMALAR (BUTTONS)
+========================================================= */
+
+.main-button {
+  position: relative;
+  overflow: hidden;
+  min-width: 270px;
+  height: 62px;
+  padding: 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.25);
+  transition: var(--transition-smooth);
+  animation: fadeUp 0.8s ease 0.7s both, pulseGlow 3s ease-in-out 2s infinite;
+}
+
+.main-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 70%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.8s ease;
+}
+
+.main-button:hover::before {
+  left: 140%;
+}
+
+.main-button:hover {
+  transform: translateY(-5px) scale(1.02);
+  background: rgba(255, 255, 255, 0.96);
+  color: #302824;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
+
+.main-button span {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transition: var(--transition-smooth);
+}
+
+.main-button:hover span {
+  transform: translateX(6px) rotate(-8deg);
+}
+
+/* Edit Floating Button */
+.edit-floating {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  z-index: 20;
+  height: 48px;
+  padding: 0 24px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  background: rgba(30, 24, 20, 0.65);
+  color: white;
+  cursor: pointer;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+  transition: var(--transition-smooth);
+}
+
+.edit-floating:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: #302824;
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32);
+}
+
+
+/* =========================================================
+   5. EDITOR PAGE & FORMALAR
+========================================================= */
+
+.editor-page {
+  min-height: 100vh;
+  padding: 45px 20px 80px;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(190, 164, 139, 0.22), transparent 30%),
+    radial-gradient(circle at 90% 100%, rgba(150, 125, 105, 0.12), transparent 30%),
+    var(--bg-primary);
+}
+
+.editor-container {
+  width: 100%;
+  max-width: 920px;
+  margin: auto;
+}
+
+.back-button {
+  border: 0;
+  background: transparent;
+  color: #655b54;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.back-button:hover {
+  transform: translateX(-7px);
+  color: #302824;
+}
+
+.editor-header {
+  text-align: center;
+  margin: 25px auto 40px;
+  animation: fadeUp 0.8s ease both;
+}
+
+.editor-header p {
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 6px;
+  color: #9b8c81;
+  margin-bottom: 14px;
+}
+
+.editor-header h1 {
+  font-size: clamp(30px, 5vw, 42px);
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+.editor-header span {
+  color: var(--text-muted);
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.form-card {
+  padding: 38px;
+  border-radius: 24px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lux), inset 0 1px rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  animation: scaleIn 0.8s ease 0.15s both;
+}
+
+.form-section {
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(150, 130, 115, 0.16);
+}
+
+.form-section h2 {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 21px;
+  color: #3b332f;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5a514c;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 14px 15px;
+  border: 1px solid #ded7d1;
+  border-radius: 11px;
+  outline: none;
+  background: rgba(250, 249, 247, 0.82);
+  color: #332d29;
+  font-size: 14px;
+  transition: var(--transition-smooth);
+}
+
+input:hover,
+textarea:hover {
+  border-color: #b9a99d;
+}
+
+input:focus,
+textarea:focus {
+  background: white;
+  border-color: #9c8b7d;
+  box-shadow: 0 0 0 4px rgba(156, 139, 125, 0.15), 0 8px 20px rgba(70, 50, 40, 0.05);
+}
+
+textarea {
+  min-height: 105px;
+  resize: vertical;
+}
+
+
+/* =========================================================
+   6. RASMLAR BILAN ISHLASH VA YUKLASH
+========================================================= */
+
+.image-upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.upload-box {
+  min-height: 220px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  text-align: center;
+  border: 1px dashed #c7bbb0;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(250, 248, 246, 0.95), rgba(242, 237, 232, 0.8));
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.upload-box:hover {
+  border-color: #806f61;
+  transform: translateY(-5px);
+  box-shadow: 0 18px 40px rgba(55, 42, 34, 0.1);
+}
+
+.upload-box input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 13px;
+  border: 1px solid #c8bbb0;
+  border-radius: 50%;
+  font-size: 21px;
+  color: #75675d;
+  background: rgba(255, 255, 255, 0.9);
+  transition: var(--transition-smooth);
+}
+
+.upload-box:hover .upload-icon {
+  transform: translateY(-4px) rotate(8deg);
+  box-shadow: 0 10px 25px rgba(50, 35, 25, 0.1);
+}
+
+.upload-preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.18;
+  pointer-events: none;
+  transition: var(--transition-smooth);
+}
+
+.upload-box:hover .upload-preview {
+  opacity: 0.3;
+  transform: scale(1.05);
+}
+
+/* Tayyor namuna rasmlar (Preset/Sample Images) */
+.preset-images,
+.sample-images {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.preset-image,
+.sample-thumb {
+  width: 100%;
+  height: 58px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition-smooth);
+}
+
+.preset-image:hover,
+.sample-thumb:hover {
+  transform: translateY(-3px) scale(1.04);
+  border-color: #9c8b7d;
+}
+
+.preset-image.active,
+.sample-thumb.selected {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 12px var(--accent-gold-glow);
+  transform: scale(1.04);
+}
+
+
+/* =========================================================
+   7. PREPARE BUTTON (TAYYORLASH TUGMASI)
+========================================================= */
+
+.prepare-button {
+  width: 100%;
+  height: 60px;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--btn-dark), var(--btn-dark-hover));
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 14px 40px rgba(45, 35, 30, 0.2);
+  transition: var(--transition-smooth);
+}
+
+.prepare-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 70%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.8s ease;
+}
+
+.prepare-button:hover::before {
+  left: 140%;
+}
+
+.prepare-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 50px rgba(45, 35, 30, 0.32);
+}
+
+.prepare-button span {
+  margin-left: 15px;
+  display: inline-block;
+  transition: var(--transition-smooth);
+}
+
+.prepare-button:hover span {
+  transform: translateX(7px);
+}
+
+
+/* =========================================================
+   8. TAKLIFNOMA SAHIFASI (INVITATION PAGE)
+========================================================= */
+
+.invitation-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: white;
+  background: linear-gradient(135deg, #65584e, #302822);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed !important; /* Fon harakatsiz */
+  isolation: isolate;
+}
+
+.invitation-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+  animation: none !important; /* Fon qo'shimcha animatsiyadan xoli */
+  transform: none !important;
+}
+
+.invitation-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 45%),
+    linear-gradient(135deg, rgba(20, 15, 12, 0.45), rgba(35, 25, 20, 0.25), rgba(10, 8, 6, 0.5));
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 0;
+}
+
+
+/* =========================================================
+   9. TAKLIFNOMA KARTASI VA ELEMENTLARI
+========================================================= */
+
+.invitation-card {
+  width: 100%;
+  max-width: 720px;
+  position: relative;
+  z-index: 2;
+  padding: 70px 60px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 8px;
+  background: linear-gradient(145deg, rgba(55, 42, 36, 0.38), rgba(20, 15, 13, 0.25));
+  box-shadow: 0 35px 100px rgba(0, 0, 0, 0.35), inset 0 1px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  animation: scaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.invitation-card::before,
+.invitation-card::after {
+  content: "";
+  position: absolute;
+  width: 85px;
+  height: 85px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+.invitation-card::before {
+  top: 20px;
+  left: 20px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.invitation-card::after {
+  right: 20px;
+  bottom: 20px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Matnlar va Ramka kontenti */
+.invitation-top {
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 7px;
+  margin-bottom: 28px;
+  animation: fadeDown 0.8s ease 0.2s both;
+}
+
+.invitation-card h1 {
+  font-size: clamp(46px, 7vw, 68px);
+  font-weight: 400;
+  line-height: 1.04;
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  animation: fadeUp 0.9s ease 0.3s both;
+}
+
+.star {
+  display: inline-block;
+  margin: 21px 0;
+  font-size: 23px;
+  color: var(--accent-gold);
+  animation: scaleIn 0.8s ease 0.4s both, floating 3.5s ease-in-out 1.2s infinite;
+}
+
+.invitation-card h2 {
+  font-size: 33px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 26px;
+  animation: fadeUp 0.8s ease 0.45s both;
+}
+
+.invitation-description {
+  max-width: 520px;
+  margin: 0 auto 35px;
+  font-size: 16px;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.92);
+  animation: fadeUp 0.8s ease 0.55s both;
+}
+
+/* Markaziy Rasm */
+.center-photo-wrapper {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 33px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.3), 0 0 0 8px rgba(255, 255, 255, 0.04);
+  animation: scaleIn 0.9s ease 0.55s both, floating 5s ease-in-out 1.5s infinite;
+  transition: var(--transition-smooth);
+}
+
+.center-photo-wrapper:hover {
+  transform: scale(1.06);
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.4), 0 0 0 12px var(--accent-gold-glow);
+}
+
+.center-photo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Ismlar (Couple Names) */
+.couple-names {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 42px;
+  font-size: 42px;
+  font-style: italic;
+  text-shadow: 0 7px 28px rgba(0, 0, 0, 0.35);
+  animation: fadeUp 0.9s ease 0.7s both;
+}
+
+.couple-names span {
+  transition: var(--transition-smooth);
+}
+
+.couple-names span:hover {
+  transform: translateY(-3px);
+  color: var(--accent-gold);
+  text-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+}
+
+.couple-names b {
+  font-size: 21px;
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+/* Sana va Vaqt (Date Info) */
+.date-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  animation: fadeUp 0.8s ease 0.8s both;
+}
+
+.date-item {
+  min-width: 155px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.date-item strong {
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.date-item span {
+  font-family: Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+}
+
+.date-item small {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.date-divider {
+  width: 1px;
+  height: 70px;
+  margin: 0 20px;
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.75), transparent);
+}
+
+/* Restoran va Manzil (Venue) */
+.venue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.8s ease 0.9s both;
+}
+
+.venue-icon {
+  font-size: 27px;
+  animation: floating 3.2s ease-in-out infinite;
+}
+
+.venue strong {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.venue p {
+  margin-top: 5px;
+  font-size: 13px;
+  opacity: 0.82;
+}
+
+.invitation-bottom {
+  margin-top: 30px;
+  font-size: 18px;
+  font-style: italic;
+  animation: fadeUp 0.8s ease 1s both;
+}
+
+
+/* =========================================================
+   10. ADAPTIVLIK VA MOBIL VERSIYA (RESPONSIVE)
+========================================================= */
+
+@media (max-width: 600px) {
+  .home-page {
+    padding: 20px;
+  }
+
+  .home-label {
+    font-size: 8px;
+    letter-spacing: 5px;
+  }
+
+  .home-content h1 {
+    font-size: 42px;
+  }
+
+  .home-description {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .main-button {
+    min-width: 225px;
+    height: 55px;
+    font-size: 14px;
+  }
+
+  /* Form / Input optimization */
+  .editor-page {
+    padding: 25px 12px 55px;
+  }
+
+  .editor-header h1 {
+    font-size: 29px;
+  }
+
+  .form-card {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .form-grid,
+  .image-upload-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  input[type="time"] {
+    width: 100%;
+    height: 48px;
+    padding: 0 12px;
+    border: 1px solid #ded7d1;
+    border-radius: 10px;
+    background: #faf9f7;
+    color: #332d29;
+    font-size: 15px;
+  }
+
+  .preset-images,
+  .sample-images {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+  }
+
+  .preset-image,
+  .sample-thumb {
+    height: 48px;
+  }
+
+  /* Invitation Mobile */
+  .invitation-page {
+    padding: 25px 10px;
+  }
+
+  .invitation-card {
+    padding: 50px 18px;
+  }
+
+  .invitation-card::before,
+  .invitation-card::after {
+    width: 52px;
+    height: 52px;
+  }
+
+  .invitation-card h1 {
+    font-size: 40px;
+  }
+
+  .invitation-card h2 {
+    font-size: 25px;
+  }
+
+  .center-photo-wrapper {
+    width: 128px;
+    height: 128px;
+  }
+
+  .couple-names {
+    font-size: 28px;
+    gap: 10px;
+  }
+
+  .date-item {
+    min-width: 100px;
+  }
+
+  .date-item strong {
+    font-size: 22px;
+  }
+
+  .date-divider {
+    height: 50px;
+    margin: 0 8px;
+  }
+
+  .edit-floating {
+    right: 15px;
+    bottom: 15px;
+    height: 42px;
+    padding: 0 18px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .home-content h1 {
+    font-size: 35px;
+  }
+
+  .couple-names {
+    font-size: 24px;
+  }
+
+  .date-item strong {
+    font-size: 18px;
+  }
+}
+
+
+/* =========================================================
+   11. REDUCED MOTION (OPTIMIZATSIYA)
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}/* Shaffof va Animatsiyali Ulashish Tugmasi */
+.share-button {
+  margin-top: 25px;
+  width: 100%;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  
+  /* Glassmorphic (shaffof) ko'rinish */
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  
+  /* Matn ko'rinishi */
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  
+  /* Silliq animatsiyalar */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tugma ustiga olib borgandagi (Hover) effekt */
+.share-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(255, 255, 255, 0.25), 
+              0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+/* Tugma bosilgandagi (Active) effekt */
+.share-button:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Yashin simon nur animatsiyasi (Shimmer Effect) */
+.share-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: 0.6s;
+}
+
+.share-button:hover::before {
+  left: 100%;
+}
+
+/* Nusxalandi holatidagi (Copied) yashil shaffof uslub */
+.share-button.copied {
+  background: rgba(46, 204, 113, 0.25);
+  border-color: rgba(46, 204, 113, 0.6);
+  color: #2ecc71;
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.4);
+}
+
+/* Belgicha animatsiyasi */
+.share-icon {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.share-button:hover .share-icon {
+  transform: rotate(15deg) scale(1.2);
+}
