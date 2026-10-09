@@ -180,30 +180,15 @@ function App() {
   };
 
   // =========================
-  // RASMLARNI SUPABASE STORAGE'GA YUKLASH
+  // FAYLNI BASE64 MATNGA O'GIRISH (STORAGE SIZ SAQLASH UCHUN)
   // =========================
-  const uploadImageToStorage = async (file, bucketName) => {
-    if (!file) return null;
-    const fileExt = file.name.split('.').pop();
-    const filePath = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
-
-    const { error } = await supabase.storage
-      .from(bucketName)
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false
-      });
-
-    if (error) {
-      console.error("Storage upload error:", error.message);
-      return null;
-    }
-
-    const { data: urlData } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(filePath);
-
-    return urlData?.publicUrl || null;
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
   };
 
   // =========================
@@ -216,17 +201,10 @@ function App() {
       let finalCenterUrl = centerImage;
 
       if (bgFile) {
-        const uploadedBgUrl = await uploadImageToStorage(bgFile, "images");
-        if (uploadedBgUrl) {
-          finalBgUrl = uploadedBgUrl;
-        }
+        finalBgUrl = await convertFileToBase64(bgFile);
       }
-
       if (centerFile) {
-        const uploadedCenterUrl = await uploadImageToStorage(centerFile, "images");
-        if (uploadedCenterUrl) {
-          finalCenterUrl = uploadedCenterUrl;
-        }
+        finalCenterUrl = await convertFileToBase64(centerFile);
       }
 
       const newId = Date.now().toString();
