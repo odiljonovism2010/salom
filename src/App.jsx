@@ -184,22 +184,26 @@ function App() {
   // =========================
   const uploadImageToStorage = async (file, bucketName) => {
     if (!file) return null;
-    const filePath = `${Date.now()}_${file.name}`;
+    const fileExt = file.name.split('.').pop();
+    const filePath = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
 
     const { error } = await supabase.storage
       .from(bucketName)
-      .upload(filePath, file);
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
 
     if (error) {
-      console.error("Storage error:", error.message);
+      console.error("Storage upload error:", error.message);
       return null;
     }
 
-    const { data } = supabase.storage
+    const { data: urlData } = supabase.storage
       .from(bucketName)
       .getPublicUrl(filePath);
 
-    return data.publicUrl;
+    return urlData?.publicUrl || null;
   };
 
   // =========================
@@ -212,10 +216,17 @@ function App() {
       let finalCenterUrl = centerImage;
 
       if (bgFile) {
-        finalBgUrl = await uploadImageToStorage(bgFile, "images");
+        const uploadedBgUrl = await uploadImageToStorage(bgFile, "images");
+        if (uploadedBgUrl) {
+          finalBgUrl = uploadedBgUrl;
+        }
       }
+
       if (centerFile) {
-        finalCenterUrl = await uploadImageToStorage(centerFile, "images");
+        const uploadedCenterUrl = await uploadImageToStorage(centerFile, "images");
+        if (uploadedCenterUrl) {
+          finalCenterUrl = uploadedCenterUrl;
+        }
       }
 
       const newId = Date.now().toString();
