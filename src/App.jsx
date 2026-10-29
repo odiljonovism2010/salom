@@ -683,7 +683,7 @@ function App() {
   };
 
   const handleShare = () => {
-    const shareUrl = window.location.href;
+    const shareUrl = `https://salom-topaz.vercel.app/${window.location.search}`;
 
     if (navigator.share) {
       navigator
