@@ -587,28 +587,37 @@ function App() {
     setSelectedMusicType("custom");
   };
 
-  const uploadFileToStorage = async (file, bucketName) => {
-    if (!file) return null;
-    try {
-      const fileExt = file.name.split(".").pop();
-      const filePath = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
 
-      const { error } = await supabase.storage
-        .from(bucketName)
-        .upload(filePath, file, { cacheControl: "3600", upsert: false });
+const uploadFileToStorage = async (file, bucketName) => {
+  if (!file) return null;
 
-      if (error) {
-        console.warn("Storage upload warning:", error.message);
-        return null;
-      }
+  const fileExt = file.name.split(".").pop();
+  const filePath = `${Date.now()}_${Math.random()
+    .toString(36)
+    .substring(2, 7)}.${fileExt}`;
 
-      const { data: urlData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
-      return urlData?.publicUrl || null;
-    } catch (err) {
-      console.warn("Upload exception:", err);
-      return null;
-    }
-  };
+  const { error } = await supabase.storage
+    .from(bucketName)
+    .upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+
+  if (error) {
+    throw new Error("Fayl yuklanmadi: " + error.message);
+  }
+
+  const { data } = supabase.storage
+    .from(bucketName)
+    .getPublicUrl(filePath);
+
+  if (!data?.publicUrl) {
+    throw new Error("Fayl uchun ochiq havola yaratilmadi.");
+  }
+
+  return data.publicUrl;
+};
+
 
   const handleSaveAndPrepare = async () => {
     setSaving(true);
@@ -683,7 +692,7 @@ function App() {
   };
 
   const handleShare = () => {
-    const shareUrl = `https://salom-topaz.vercel.app/${window.location.search}`;
+   const shareUrl = `https://salom-topaz.vercel.app/${window.location.search}`;
 
     if (navigator.share) {
       navigator
