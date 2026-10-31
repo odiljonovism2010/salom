@@ -1994,3 +1994,27 @@ input[type="time"] {
     display: none;
   }
 }
+
+.image-upload-grid::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 15px;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(190, 151, 86, 0.55) 15%,
+    rgba(190, 151, 86, 0.55) 85%,
+    transparent
+  );
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .image-upload-grid::after {
+    display: none;
+  }
+}
