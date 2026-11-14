@@ -13,9 +13,9 @@ const WEEKDAYS = [
 
 const SAMPLE_TRACKS = [
   { id: 1, title: "Kuy 1", url: "/music/11.mp3" },
-  { id: 2, title: "Kuy 2", url: "/music/2.mp3" },
-  { id: 3, title: "Kuy 3", url: "/music/3.mp3" },
-  { id: 4, title: "Kuy 4", url: "/music/4.mp3" },
+  { id: 2, title: "Kuy 2", url: "/music/12.mp3" },
+  { id: 3, title: "Kuy 3", url: "/music/13.mp3" },
+  { id: 4, title: "Kuy 4", url: "/music/14.mp3" },
 ];
 
 const BACKGROUND_SAMPLES = [
