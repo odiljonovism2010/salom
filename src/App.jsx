@@ -610,16 +610,37 @@ function App() {
     else audio.pause();
   };
 
+  // Yangi kuy tanlanganda src yangilangandan KEYIN ijro etiladi
+  const playOnChange = useRef(false);
+
+  useEffect(() => {
+    if (!playOnChange.current) return;
+    playOnChange.current = false;
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = 0.35;
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  }, [musicUrl]);
+
+  const switchTo = (url) => {
+    if (url === musicUrl) {
+      playMusicFromStart();
+    } else {
+      playOnChange.current = true;
+      setMusicUrl(url);
+    }
+  };
+
   const pickTrack = (track) => {
     setSelectedMusicType("original");
-    setMusicUrl(track.url);
-    playMusicFromStart();
+    switchTo(track.url);
   };
 
   const pickCustom = () => {
     setSelectedMusicType("custom");
-    if (customUrl) setMusicUrl(customUrl);
-    playMusicFromStart();
+    if (customUrl) switchTo(customUrl);
+    else playMusicFromStart();
   };
 
   const stepTrack = (dir) => {
