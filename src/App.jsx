@@ -356,7 +356,7 @@ function App() {
       },
       bgImg: "",
       cImg: "",
-      musicUrl: "/music/11.mp3",
+      musicUrl: idParam ? "" : "/music/11.mp3",
     };
   };
 
@@ -428,6 +428,8 @@ function App() {
             if (!SAMPLE_TRACKS.some((t) => t.url === invData.music_url)) {
               setSelectedMusicType("custom");
             }
+          } else {
+            setMusicUrl("/music/11.mp3");
           }
           setStep("invitation");
         }
@@ -446,7 +448,7 @@ function App() {
   // =========================
   useEffect(() => {
     const container = emojiRainRef.current;
-    if (step !== "invitation" || !container) return;
+    if (step !== "invitation" || loading || !container) return;
 
     const items = [];
     for (let i = 0; i < 28; i++) {
@@ -463,14 +465,14 @@ function App() {
     }
 
     return () => items.forEach((item) => item.remove());
-  }, [step]);
+  }, [step, loading]);
 
   // =========================
   // MUSIQA
   // =========================
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !musicUrl) return;
 
     audio.volume = 0.35;
     audio.loop = true;
@@ -490,7 +492,7 @@ function App() {
       document.removeEventListener("touchstart", startMusic);
       document.removeEventListener("keydown", startMusic);
     };
-  }, [step, musicUrl]);
+  }, [step, musicUrl, loading]);
 
   const playMusicFromStart = () => {
     const audio = audioRef.current;
@@ -712,7 +714,7 @@ const uploadFileToStorage = async (file, bucketName) => {
   const globalAudio = (
     <audio
       ref={audioRef}
-      src={musicUrl}
+      src={musicUrl || undefined}
       preload="auto"
       loop
       onPlay={() => setIsPlaying(true)}
