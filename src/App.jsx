@@ -587,35 +587,37 @@ function App() {
     setSelectedMusicType("custom");
   };
 
-  const uploadFileToStorage = async (file, bucketName) => {
-    if (!file) return null;
 
-    const fileExt = file.name.split(".").pop();
-    const filePath = `${Date.now()}_${Math.random()
-      .toString(36)
-      .substring(2, 7)}.${fileExt}`;
+const uploadFileToStorage = async (file, bucketName) => {
+  if (!file) return null;
 
-    const { error } = await supabase.storage
-      .from(bucketName)
-      .upload(filePath, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
+  const fileExt = file.name.split(".").pop();
+  const filePath = `${Date.now()}_${Math.random()
+    .toString(36)
+    .substring(2, 7)}.${fileExt}`;
 
-    if (error) {
-      throw new Error("Fayl yuklanmadi: " + error.message);
-    }
+  const { error } = await supabase.storage
+    .from(bucketName)
+    .upload(filePath, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
 
-    const { data } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(filePath);
+  if (error) {
+    throw new Error("Fayl yuklanmadi: " + error.message);
+  }
 
-    if (!data?.publicUrl) {
-      throw new Error("Fayl uchun ochiq havola yaratilmadi.");
-    }
+  const { data } = supabase.storage
+    .from(bucketName)
+    .getPublicUrl(filePath);
 
-    return data.publicUrl;
-  };
+  if (!data?.publicUrl) {
+    throw new Error("Fayl uchun ochiq havola yaratilmadi.");
+  }
+
+  return data.publicUrl;
+};
+
 
   const handleSaveAndPrepare = async () => {
     setSaving(true);
@@ -671,7 +673,6 @@ function App() {
 
       if (error) throw error;
 
-      // ТУТ ИСПРАВЛЕНО: формируется короткая ссылка с ID вместо раздутого URL
       const newUrl = `${window.location.origin}${window.location.pathname}?id=${newId}`;
       window.history.pushState({ path: newUrl }, "", newUrl);
 
@@ -691,8 +692,7 @@ function App() {
   };
 
   const handleShare = () => {
-    // ТУТ ИСПРАВЛЕНО: корректный короткий адрес текущей страницы с ID для отправки
-    const shareUrl = `${window.location.origin}${window.location.pathname}${window.location.search}`;
+   const shareUrl = `https://salom-topaz.vercel.app/${window.location.search}`;
 
     if (navigator.share) {
       navigator
