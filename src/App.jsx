@@ -694,7 +694,7 @@ const uploadFileToStorage = async (file, bucketName) => {
   };
 
   const handleShare = () => {
-   const shareUrl = `https://salom-topaz.vercel.app/${window.location.search}`;
+   const shareUrl = `${window.location.origin}/${window.location.search}`;
 
     if (navigator.share) {
       navigator
