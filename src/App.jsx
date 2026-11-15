@@ -32,18 +32,7 @@ const CENTER_SAMPLES = [
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV78bdKzGbqK0_GjIvMn4vgysyLwsCSa_7QiN8VuPHGg&s=10",
 ];
 
-// Падающие украшения: SVG вместо эмодзи, чтобы на любом телефоне выглядели одинаково
-const HEART_PATH =
-  "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
-
-const RAIN_SHAPES = [
-  `<svg viewBox="0 0 24 24"><path fill="#ff6f9f" d="${HEART_PATH}"/></svg>`,
-  `<svg viewBox="0 0 24 24"><path fill="#ffffff" d="${HEART_PATH}"/></svg>`,
-  `<svg viewBox="0 0 24 24"><path fill="#f2dca3" d="M12 1.5l2.6 8 8 2.5-8 2.5-2.6 8-2.6-8-8-2.5 8-2.5z"/></svg>`,
-  `<svg viewBox="0 0 24 24"><g fill="#ffb3cc"><ellipse cx="12" cy="6.2" rx="3.3" ry="4.7"/><ellipse cx="12" cy="6.2" rx="3.3" ry="4.7" transform="rotate(72 12 12)"/><ellipse cx="12" cy="6.2" rx="3.3" ry="4.7" transform="rotate(144 12 12)"/><ellipse cx="12" cy="6.2" rx="3.3" ry="4.7" transform="rotate(216 12 12)"/><ellipse cx="12" cy="6.2" rx="3.3" ry="4.7" transform="rotate(288 12 12)"/></g><circle cx="12" cy="12" r="2.4" fill="#f2dca3"/></svg>`,
-  `<svg viewBox="0 0 24 24" fill="none" stroke="#f2dca3" stroke-width="2"><circle cx="8.5" cy="14.5" r="5.5"/><circle cx="15.5" cy="14.5" r="5.5"/><path d="M6.8 4.2l1.7 2.3 1.7-2.3-.8-1.6H7.6z" fill="#f2dca3" stroke="none"/></svg>`,
-  `<svg viewBox="0 0 24 24"><path fill="#ffd0df" d="M12 2c4.5 3.2 6.5 7.4 6.5 11.2A6.5 6.5 0 0 1 12 20a6.5 6.5 0 0 1-6.5-6.8C5.5 9.4 7.5 5.2 12 2z"/></svg>`,
-];
+const RAIN_EMOJIS = ["❤️", "🩷", "🤍", "💍", "✨", "🕊️", "🌸", "💫"];
 
 // Yulduzchalar uchun doimiy (random emas) pozitsiyalar
 const SPARKLES = Array.from({ length: 28 }, (_, i) => ({
@@ -52,77 +41,6 @@ const SPARKLES = Array.from({ length: 28 }, (_, i) => ({
   delay: `${(i % 9) * 0.55}s`,
   duration: `${3 + (i % 5)}s`,
 }));
-
-// Tushib turuvchi oltin chang zarralari (doimiy joylashuv)
-const DUST = Array.from({ length: 22 }, (_, i) => ({
-  left: `${(i * 47 + 9) % 100}%`,
-  size: 2 + (i % 4),
-  delay: `-${(i % 11) * 1.3}s`,
-  duration: `${14 + (i % 7) * 2.5}s`,
-  sway: `${((i % 5) - 2) * 26}px`,
-}));
-
-const PinIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z" />
-    <circle cx="12" cy="9.5" r="2.6" />
-  </svg>
-);
-
-// =========================
-// MA'LUMOTLAR HAVOLANING O'ZIDA
-// Supabase javob bermasa ham taklifnoma boshqalarga to'liq ochiladi
-// =========================
-const SHARE_FIELDS = [
-  "topText", "title", "subtitle", "description", "firstName", "secondName",
-  "day", "month", "year", "time", "weekday", "restaurant", "address", "bottomText",
-];
-
-// Faqat https://... yoki /... ko'rinishidagi havolalar (blob: va boshqalar o'tmaydi)
-const safeUrl = (u) =>
-  typeof u === "string" && /^(https?:\/\/|\/(?!\/))[^\s"'()<>\\]*$/.test(u) ? u : "";
-
-const toBase64Url = (obj) => {
-  const bytes = new TextEncoder().encode(JSON.stringify(obj));
-  let bin = "";
-  bytes.forEach((b) => {
-    bin += String.fromCharCode(b);
-  });
-  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-};
-
-const decodeShared = (raw) => {
-  if (!raw) return null;
-  try {
-    const b64 = raw.replace(/-/g, "+").replace(/_/g, "/");
-    const bin = atob(b64 + "=".repeat((4 - (b64.length % 4)) % 4));
-    const o = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))));
-    if (!o || typeof o !== "object" || !o.data || typeof o.data !== "object") return null;
-
-    const data = {};
-    SHARE_FIELDS.forEach((k) => {
-      data[k] = String(o.data[k] ?? "").slice(0, 2000);
-    });
-    return { data, bgImg: safeUrl(o.bgImg), cImg: safeUrl(o.cImg), musicUrl: safeUrl(o.musicUrl) };
-  } catch {
-    return null;
-  }
-};
-
-const initialOf = (s) => (s || "").trim().charAt(0).toUpperCase();
-
-// Har bir harfi alohida animatsiya qilinadigan matn
-function SplitText({ text }) {
-  return (
-    <span className="split" aria-label={text}>
-      {Array.from(text || "").map((ch, i) => (
-        <span key={i} aria-hidden="true" style={{ "--i": i }}>
-          {ch === " " ? " " : ch}
-        </span>
-      ))}
-    </span>
-  );
-}
 
 const MusicNoteIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -416,9 +334,8 @@ function App() {
   const getInitialState = () => {
     const params = new URLSearchParams(window.location.search);
     const idParam = params.get("id");
-    const shared = decodeShared(params.get("d"));
 
-    const base = {
+    return {
       step: idParam ? "invitation" : "home",
       data: {
         topText: "",
@@ -440,17 +357,6 @@ function App() {
       bgImg: "",
       cImg: "",
       musicUrl: "/music/11.mp3",
-    };
-
-    if (!shared) return base;
-
-    return {
-      ...base,
-      step: "invitation",
-      data: { ...base.data, ...shared.data },
-      bgImg: shared.bgImg,
-      cImg: shared.cImg,
-      musicUrl: shared.musicUrl || base.musicUrl,
     };
   };
 
@@ -477,11 +383,6 @@ function App() {
 
   const audioRef = useRef(null);
   const emojiRainRef = useRef(null);
-  const pageRef = useRef(null);
-  const tiltRef = useRef(null);
-  const confettiRef = useRef(null);
-  const tiltRaf = useRef(0);
-  const [gate, setGate] = useState("closed"); // closed -> opening -> gone
 
   // =========================
   // SUPABASE'DAN O'QISH
@@ -490,7 +391,7 @@ function App() {
     const fetchInvitation = async () => {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
-      if (!id || params.get("d")) return; // ma'lumot havolaning o'zida bor
+      if (!id) return;
 
       setLoading(true);
       try {
@@ -548,18 +449,15 @@ function App() {
     if (step !== "invitation" || !container) return;
 
     const items = [];
-    const count = window.innerWidth < 600 ? 20 : 28; // на телефонах чуть меньше, чтобы не тормозило
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 28; i++) {
       const emoji = document.createElement("span");
       emoji.className = "rain-emoji";
-      emoji.innerHTML = RAIN_SHAPES[Math.floor(Math.random() * RAIN_SHAPES.length)];
+      emoji.textContent = RAIN_EMOJIS[Math.floor(Math.random() * RAIN_EMOJIS.length)];
       emoji.style.left = `${Math.random() * 100}%`;
       emoji.style.animationDuration = `${7 + Math.random() * 9}s`;
       emoji.style.animationDelay = `${Math.random() * 12}s`;
       emoji.style.setProperty("--drift", `${Math.random() * 140 - 70}px`);
-      const size = 14 + Math.random() * 14;
-      emoji.style.width = `${size}px`;
-      emoji.style.height = `${size}px`;
+      emoji.style.fontSize = `${14 + Math.random() * 16}px`;
       container.appendChild(emoji);
       items.push(emoji);
     }
@@ -610,37 +508,16 @@ function App() {
     else audio.pause();
   };
 
-  // Yangi kuy tanlanganda src yangilangandan KEYIN ijro etiladi
-  const playOnChange = useRef(false);
-
-  useEffect(() => {
-    if (!playOnChange.current) return;
-    playOnChange.current = false;
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.volume = 0.35;
-    audio.currentTime = 0;
-    audio.play().catch(() => {});
-  }, [musicUrl]);
-
-  const switchTo = (url) => {
-    if (url === musicUrl) {
-      playMusicFromStart();
-    } else {
-      playOnChange.current = true;
-      setMusicUrl(url);
-    }
-  };
-
   const pickTrack = (track) => {
     setSelectedMusicType("original");
-    switchTo(track.url);
+    setMusicUrl(track.url);
+    playMusicFromStart();
   };
 
   const pickCustom = () => {
     setSelectedMusicType("custom");
-    if (customUrl) switchTo(customUrl);
-    else playMusicFromStart();
+    if (customUrl) setMusicUrl(customUrl);
+    playMusicFromStart();
   };
 
   const stepTrack = (dir) => {
@@ -678,147 +555,6 @@ function App() {
   }, [data.day, data.month, data.year, data.time, now]);
 
   // =========================
-  // KIRISH PARDASI, SKROLL ANIMATSIYALAR, 3D EFFEKT
-  // =========================
-  const isOpen = gate !== "closed";
-
-  // Parda yopiq paytda sahifa aylanmasin
-  useEffect(() => {
-    if (step !== "invitation" || gate !== "closed") return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [step, gate]);
-
-  // Elementlar ekranga kirganda ketma-ket paydo bo'ladi
-  useEffect(() => {
-    if (step !== "invitation" || !isOpen) return;
-
-    let io;
-    const start = () => {
-      const nodes = Array.from(document.querySelectorAll(".card-tilt .reveal"));
-      if (!("IntersectionObserver" in window)) {
-        nodes.forEach((n) => n.classList.add("in"));
-        return;
-      }
-      let firstBatch = true;
-      io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((en) => {
-            if (!en.isIntersecting) return;
-            // Pastda turgan elementlar skroll qilinganda kechikmasdan chiqadi
-            if (!firstBatch) en.target.style.setProperty("--d", "0.05s");
-            en.target.classList.add("in");
-            io.unobserve(en.target);
-          });
-          firstBatch = false;
-        },
-        { threshold: 0.12 }
-      );
-      nodes.forEach((n) => io.observe(n));
-    };
-
-    const timer = setTimeout(start, gate === "opening" ? 380 : 0);
-    return () => {
-      clearTimeout(timer);
-      io?.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, isOpen]);
-
-  const burstConfetti = () => {
-    const box = confettiRef.current;
-    if (!box || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const colors = ["#f2dca3", "#d9b86c", "#ffffff", "#f4b8cc", "#b5527a"];
-    const ox = window.innerWidth / 2;
-    const oy = window.innerHeight * 0.5;
-
-    for (let i = 0; i < 70; i++) {
-      const el = document.createElement("i");
-      const size = 6 + Math.random() * 7;
-      el.style.cssText =
-        `position:absolute;left:${ox}px;top:${oy}px;width:${size}px;` +
-        `height:${size * (Math.random() > 0.5 ? 1 : 0.45)}px;background:${colors[i % colors.length]};` +
-        `border-radius:${Math.random() > 0.6 ? "50%" : "2px"};will-change:transform,opacity`;
-      box.appendChild(el);
-
-      const angle = Math.random() * Math.PI * 2;
-      const dist = 140 + Math.random() * 320;
-      const dx = Math.cos(angle) * dist;
-      const dy = Math.sin(angle) * dist - 120;
-      const rot = (Math.random() - 0.5) * 900;
-
-      const anim = el.animate(
-        [
-          { transform: "translate(-50%,-50%) scale(.2) rotate(0deg)", opacity: 1 },
-          {
-            transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1) rotate(${rot / 2}deg)`,
-            opacity: 1,
-            offset: 0.55,
-          },
-          {
-            transform: `translate(calc(-50% + ${dx * 1.15}px), calc(-50% + ${dy + 260}px)) scale(.9) rotate(${rot}deg)`,
-            opacity: 0,
-          },
-        ],
-        {
-          duration: 1600 + Math.random() * 1200,
-          easing: "cubic-bezier(.2,.7,.3,1)",
-          delay: Math.random() * 120,
-        }
-      );
-      anim.onfinish = () => el.remove();
-    }
-  };
-
-  const openGate = () => {
-    if (gate !== "closed") return;
-    playMusicFromStart();
-    burstConfetti();
-    setGate("opening");
-    setTimeout(() => setGate("gone"), 1700);
-  };
-
-  const handleTilt = (e) => {
-    if (e.pointerType !== "mouse" || !isOpen) return;
-    const { clientX, clientY } = e;
-    cancelAnimationFrame(tiltRaf.current);
-    tiltRaf.current = requestAnimationFrame(() => {
-      const page = pageRef.current;
-      const tilt = tiltRef.current;
-      if (!page || !tilt) return;
-      const nx = clientX / window.innerWidth - 0.5;
-      const ny = clientY / window.innerHeight - 0.5;
-      const r = tilt.getBoundingClientRect();
-      tilt.style.setProperty("--rx", `${(-ny * 6).toFixed(2)}deg`);
-      tilt.style.setProperty("--ry", `${(nx * 8).toFixed(2)}deg`);
-      tilt.style.setProperty("--gx", `${clientX - r.left}px`);
-      tilt.style.setProperty("--gy", `${clientY - r.top}px`);
-      page.style.setProperty("--px", nx.toFixed(3));
-      page.style.setProperty("--py", ny.toFixed(3));
-      tilt.classList.add("hovering");
-    });
-  };
-
-  const resetTilt = () => {
-    cancelAnimationFrame(tiltRaf.current);
-    const page = pageRef.current;
-    const tilt = tiltRef.current;
-    if (tilt) {
-      tilt.style.setProperty("--rx", "0deg");
-      tilt.style.setProperty("--ry", "0deg");
-      tilt.classList.remove("hovering");
-    }
-    if (page) {
-      page.style.setProperty("--px", "0");
-      page.style.setProperty("--py", "0");
-    }
-  };
-
-  // =========================
   // HANDLERLAR
   // =========================
   const handleChange = (e) => {
@@ -853,25 +589,32 @@ function App() {
 
   const uploadFileToStorage = async (file, bucketName) => {
     if (!file) return null;
-    try {
-      const fileExt = file.name.split(".").pop();
-      const filePath = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
 
-      const { error } = await supabase.storage
-        .from(bucketName)
-        .upload(filePath, file, { cacheControl: "3600", upsert: false });
+    const fileExt = file.name.split(".").pop();
+    const filePath = `${Date.now()}_${Math.random()
+      .toString(36)
+      .substring(2, 7)}.${fileExt}`;
 
-      if (error) {
-        console.warn("Storage upload warning:", error.message);
-        return null;
-      }
+    const { error } = await supabase.storage
+      .from(bucketName)
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
 
-      const { data: urlData } = supabase.storage.from(bucketName).getPublicUrl(filePath);
-      return urlData?.publicUrl || null;
-    } catch (err) {
-      console.warn("Upload exception:", err);
-      return null;
+    if (error) {
+      throw new Error("Fayl yuklanmadi: " + error.message);
     }
+
+    const { data } = supabase.storage
+      .from(bucketName)
+      .getPublicUrl(filePath);
+
+    if (!data?.publicUrl) {
+      throw new Error("Fayl uchun ochiq havola yaratilmadi.");
+    }
+
+    return data.publicUrl;
   };
 
   const handleSaveAndPrepare = async () => {
@@ -892,22 +635,6 @@ function App() {
       if (selectedMusicType === "custom" && musicFile) {
         const url = await uploadFileToStorage(musicFile, "images");
         if (url) finalMusicUrl = url;
-      }
-
-      // Fayl yuklanmagan bo'lsa, faqat sizning telefoningizda ishlaydigan blob: havola qoladi.
-      // Uni boshqalarga yubormaymiz.
-      const failed = [];
-      if (finalBgUrl && !safeUrl(finalBgUrl)) {
-        finalBgUrl = "";
-        failed.push("orqa fon rasmi");
-      }
-      if (finalCenterUrl && !safeUrl(finalCenterUrl)) {
-        finalCenterUrl = "";
-        failed.push("markaziy rasm");
-      }
-      if (finalMusicUrl && !safeUrl(finalMusicUrl)) {
-        finalMusicUrl = SAMPLE_TRACKS[0].url;
-        failed.push("o‘z musiqangiz");
       }
 
       const newId = Date.now().toString();
@@ -932,30 +659,20 @@ function App() {
         c_img: finalCenterUrl || "",
       };
 
-      // Baza javob bermasa ham taklifnoma ishlayveradi: ma'lumotlar havolaning o'zida bor
-      try {
-        let { error } = await supabase
-          .from("invitations")
-          .insert([{ ...insertPayload, music_url: finalMusicUrl || "" }]);
+      let { error } = await supabase
+        .from("invitations")
+        .insert([{ ...insertPayload, music_url: finalMusicUrl || "" }]);
 
-        if (error && error.message && error.message.includes("music_url")) {
-          console.warn("music_url ustuni bazada yo'q. Ustunsiz saqlanmoqda...");
-          const fallbackRes = await supabase.from("invitations").insert([insertPayload]);
-          error = fallbackRes.error;
-        }
-
-        if (error) console.warn("Bazaga saqlab bo'lmadi (havola baribir ishlaydi):", error.message || error);
-      } catch (dbError) {
-        console.warn("Bazaga ulanib bo'lmadi (havola baribir ishlaydi):", dbError);
+      if (error && error.message && error.message.includes("music_url")) {
+        console.warn("music_url ustuni bazada yo'q. Ustunsiz saqlanmoqda...");
+        const fallbackRes = await supabase.from("invitations").insert([insertPayload]);
+        error = fallbackRes.error;
       }
 
-      const shareData = toBase64Url({
-        data,
-        bgImg: finalBgUrl,
-        cImg: finalCenterUrl,
-        musicUrl: finalMusicUrl,
-      });
-      const newUrl = `${window.location.origin}${window.location.pathname}?id=${newId}&d=${shareData}`;
+      if (error) throw error;
+
+      // ТУТ ИСПРАВЛЕНО: формируется короткая ссылка с ID вместо раздутого URL
+      const newUrl = `${window.location.origin}${window.location.pathname}?id=${newId}`;
       window.history.pushState({ path: newUrl }, "", newUrl);
 
       setBackgroundImage(finalBgUrl);
@@ -963,16 +680,8 @@ function App() {
       setMusicUrl(finalMusicUrl);
       playMusicFromStart();
       setIsCreator(true);
-      setGate("gone");
       setStep("invitation");
       window.scrollTo({ top: 0 });
-
-      if (failed.length) {
-        alert(
-          `Diqqat: ${failed.join(", ")} serverga yuklanmadi, shuning uchun boshqalarga ko‘rinmaydi. ` +
-            "Matnlar, sana va manzil esa havola orqali to‘liq ochiladi."
-        );
-      }
     } catch (error) {
       console.error("Saqlashda xatolik yuz berdi:", error);
       alert("Xatolik yuz berdi: " + (error.message || "Iltimos qayta urinib ko'ring."));
@@ -982,7 +691,8 @@ function App() {
   };
 
   const handleShare = () => {
-    const shareUrl = window.location.href;
+    // ТУТ ИСПРАВЛЕНО: корректный короткий адрес текущей страницы с ID для отправки
+    const shareUrl = `${window.location.origin}${window.location.pathname}${window.location.search}`;
 
     if (navigator.share) {
       navigator
@@ -1339,113 +1049,81 @@ function App() {
       ]
     : null;
 
-  const monogram =
-    [initialOf(data.firstName), initialOf(data.secondName)].filter(Boolean).join("&") || "✦";
-
   return (
     <>
       {globalAudio}
 
       <div
-        ref={pageRef}
-        className={`invitation-page ${isOpen ? "is-open" : ""}`}
+        className="invitation-page"
         style={backgroundImage ? { "--bg-image": `url("${backgroundImage}")` } : {}}
-        onPointerMove={handleTilt}
-        onPointerLeave={resetTilt}
       >
         <div className="invitation-overlay" />
-
-        <div className="dust" aria-hidden="true">
-          {DUST.map((d, i) => (
-            <i
-              key={i}
-              style={{
-                left: d.left,
-                width: d.size,
-                height: d.size,
-                animationDelay: d.delay,
-                animationDuration: d.duration,
-                "--sway": d.sway,
-              }}
-            />
-          ))}
-        </div>
-
         <div className="emoji-rain" ref={emojiRainRef} aria-hidden="true" />
 
-        <div className="card-tilt" ref={tiltRef}>
-          <div className="invitation-card">
-            <span className="card-edge" aria-hidden="true" />
-            <span className="card-glare" aria-hidden="true" />
+        <div className="invitation-card">
+          <p className="invitation-top reveal" style={{ "--d": "0.2s" }}>{data.topText}</p>
+          <h1>{data.title}</h1>
 
-            <p className="invitation-top reveal" style={{ "--d": "0.2s" }}>{data.topText}</p>
-            <h1>{data.title}</h1>
-
-            <div className="divider-ornament reveal" style={{ "--d": "0.5s" }}>
-              <span className="star">✦</span>
-            </div>
-
-            <h2 className="reveal" style={{ "--d": "0.6s" }}>{data.subtitle}</h2>
-            <p className="invitation-description reveal" style={{ "--d": "0.75s" }}>{data.description}</p>
-
-            {centerImage && (
-              <div className="center-photo-wrapper">
-                <img className="center-photo" src={centerImage} alt="Taklifnoma" />
-              </div>
-            )}
-
-            <div className="couple-names reveal reveal-plain" style={{ "--d": "0.9s" }}>
-              <SplitText text={data.firstName} />
-              <b>&</b>
-              <SplitText text={data.secondName} />
-            </div>
-
-            <div className="date-info reveal" style={{ "--d": "1.05s" }}>
-              <div className="date-item">
-                <strong>{data.day}</strong>
-                <span>{data.month}</span>
-                <small>{data.year}</small>
-              </div>
-
-              <div className="date-divider" />
-
-              <div className="date-item">
-                <strong>{data.time}</strong>
-                <span>BOSHLANISHI</span>
-                <small>{data.weekday}</small>
-              </div>
-            </div>
-
-            {cells && (
-              <div className="countdown reveal" style={{ "--d": "1.2s" }}>
-                {cells.map(([label, value]) => (
-                  <div className="count-cell" key={label}>
-                    <strong key={value}>{String(value).padStart(2, "0")}</strong>
-                    <span>{label}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="venue reveal" style={{ "--d": "1.3s" }}>
-              <div className="venue-icon"><PinIcon /></div>
-              <div>
-                <strong>{data.restaurant}</strong>
-                <p>{data.address}</p>
-              </div>
-            </div>
-
-            <p className="invitation-bottom reveal" style={{ "--d": "1.45s" }}>{data.bottomText}</p>
-
-            <button
-              className={`share-button reveal ${copied ? "copied" : ""}`}
-              style={{ "--d": "1.6s" }}
-              onClick={handleShare}
-            >
-              <span className="share-icon">{copied ? "✓" : "✦"}</span>
-              <span>{copied ? "Nusxalandi!" : "Ulashish"}</span>
-            </button>
+          <div className="divider-ornament reveal" style={{ "--d": "0.5s" }}>
+            <span className="star">✦</span>
           </div>
+
+          <h2 className="reveal" style={{ "--d": "0.6s" }}>{data.subtitle}</h2>
+          <p className="invitation-description reveal" style={{ "--d": "0.75s" }}>{data.description}</p>
+
+          {centerImage && (
+            <div className="center-photo-wrapper">
+              <img className="center-photo" src={centerImage} alt="Taklifnoma" />
+            </div>
+          )}
+
+          <div className="couple-names reveal" style={{ "--d": "0.9s" }}>
+            <span>{data.firstName}</span>
+            <b>&</b>
+            <span>{data.secondName}</span>
+          </div>
+
+          <div className="date-info reveal" style={{ "--d": "1.05s" }}>
+            <div className="date-item">
+              <strong>{data.day}</strong>
+              <span>{data.month}</span>
+              <small>{data.year}</small>
+            </div>
+
+            <div className="date-divider" />
+
+            <div className="date-item">
+              <strong>{data.time}</strong>
+              <span>BOSHLANISHI</span>
+              <small>{data.weekday}</small>
+            </div>
+          </div>
+
+          {cells && (
+            <div className="countdown reveal" style={{ "--d": "1.2s" }}>
+              {cells.map(([label, value]) => (
+                <div className="count-cell" key={label}>
+                  <strong>{String(value).padStart(2, "0")}</strong>
+                  <span>{label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="venue reveal" style={{ "--d": "1.3s" }}>
+            <div className="venue-icon">⌖</div>
+            <div>
+              <strong>{data.restaurant}</strong>
+              <p>{data.address}</p>
+            </div>
+          </div>
+
+          <p className="invitation-bottom reveal" style={{ "--d": "1.45s" }}>{data.bottomText}</p>
+
+          <button className={`share-button ${copied ? "copied" : ""}`} onClick={handleShare}>
+            <span className="share-icon">{copied ? "✓" : "✦"}</span>
+            <span>{copied ? "Nusxalandi!" : "Ulashish"}</span>
+          </button>
         </div>
 
         {isCreator && (
@@ -1463,47 +1141,6 @@ function App() {
       </div>
 
       {musicToggle}
-
-      {/* KIRISH PARDASI (faqat taklifnomani ko'rayotgan mehmonlar uchun) */}
-      {gate !== "gone" && (
-        <div className={`gate ${gate}`} role="dialog" aria-modal="true" aria-label="Taklifnomani ochish">
-          <div className="gate-half left" />
-          <div className="gate-half right" />
-
-          <div className="sparkles" aria-hidden="true">
-            {SPARKLES.map((s, i) => (
-              <i
-                key={i}
-                style={{ left: s.left, top: s.top, animationDelay: s.delay, animationDuration: s.duration }}
-              />
-            ))}
-          </div>
-
-          <div className="gate-content">
-            <p className="gate-eyebrow">Maxsus taklifnoma</p>
-            <h2 className="gate-title">
-              Siz taklif
-              <br />
-              etilgansiz
-            </h2>
-
-            {(data.firstName || data.secondName) && (
-              <p className="gate-names">
-                {data.firstName} <span>&</span> {data.secondName}
-              </p>
-            )}
-
-            <button type="button" className="seal" onClick={openGate} aria-label="Taklifnomani ochish">
-              <span className="seal-ring" />
-              <span className="seal-text">{monogram}</span>
-            </button>
-
-            <p className="gate-hint">Ochish uchun bosing</p>
-          </div>
-        </div>
-      )}
-
-      <div className="confetti" ref={confettiRef} aria-hidden="true" />
     </>
   );
 }
